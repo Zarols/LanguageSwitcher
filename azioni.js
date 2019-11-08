@@ -1,14 +1,8 @@
 
-var pathLogo = chrome.runtime.getURL("images/logo.png");
-var pathFrance = chrome.runtime.getURL("images/fr.png");
-var pathUnitedKingdom = chrome.runtime.getURL("images/gb.png");
-var pathItaly = chrome.runtime.getURL("images/it.png");
-var pathSpain = chrome.runtime.getURL("images/es.png");
-var logo = "<img src=" + pathLogo + " >";
-var france = "<img src=" + pathFrance + " >";
-var unitedKingdom = "<img src=" + pathUnitedKingdom + " >";
-var italy = "<img src=" + pathItaly + " >";
-var spain = "<img src=" + pathSpain + " >";
+var france = "<img src=" + chrome.runtime.getURL("images/fr.png") + " >";
+var unitedKingdom = "<img src=" + chrome.runtime.getURL("images/gb.png") + " >";
+var italy = "<img src=" + chrome.runtime.getURL("images/it.png") + " >";
+var spain = "<img src=" + chrome.runtime.getURL("images/es.png") + " >";
 
 //inject graphic of extension
 $("#appbar").append(
@@ -24,7 +18,6 @@ $("#appbar").append(
 "<div class='divTableCell' id='en'>" + unitedKingdom + "</div>" +
 "<div class='divTableCell' id='fr'>" + france + "</div>" +
 "<div class='divTableCell' id='es'>" + spain + "</div>" +
-//"<div class='divTableCell' id='logo'>" + logo + "</div>" +
 "</div>" +
 "</form>" +
 "</div>" +
@@ -35,7 +28,7 @@ $("#appbar").append(
 //inject the radio button in the extension's graphic
 $("#it").append(
 "<div class='radio'>" + 
-"<label><input type='radio' name='language' id='itradio' checked value='it'></input>" + 
+"<label><input type='radio' name='language' id='itradio' value='it'></input>" + 
 "</div>"
 );
 $("#en").append(
@@ -54,13 +47,19 @@ $("#es").append(
 "</div>"
 );
 
-var url = window.location.href;
 var radios = document.forms["formA"].elements["language"];
 for(var i = 0, max = radios.length; i < max; i++) {
     radios[i].onclick = function() {
-       //alert(url);
-       //window.location.href = "https://www.google.it/";
-       alert("ciao!");
+       var url = window.location.href;
+       var q = url.match(/q=(.+)&oq=/);
+       var query = q[1];
+       if(url.includes("search?sxsrf")) {
+	       var newUrl = url.replace("search?sxsrf","search?hl=" + this.value + "&gl=" + this.value +"&sxsrf");
+	       window.location = newUrl;
+	   } else if (url.includes("search?hl=")) {
+	   		var newUrl = url.replace(/search\?hl=(.+)&gl=(.+)&sxsrf/,"search?hl=" + this.value + "&gl=" + this.value +"&sxsrf");
+	   		window.location = newUrl;
+	   }
     }
 }
 
