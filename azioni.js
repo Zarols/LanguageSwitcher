@@ -1,63 +1,50 @@
+var languages = ["it-it","es-es","en-uk","fr-fr"];
+var images = [];
+for (var i = 0; i < languages.length; i++) {
+	var splitted = languages[i].split("-");
+	images.push("<img src=" + chrome.runtime.getURL("images/"+splitted[1]+".png") + " >");
+}
 
-var france = "<img src=" + chrome.runtime.getURL("images/fr.png") + " >";
-var unitedKingdom = "<img src=" + chrome.runtime.getURL("images/gb.png") + " >";
-var italy = "<img src=" + chrome.runtime.getURL("images/it.png") + " >";
-var spain = "<img src=" + chrome.runtime.getURL("images/es.png") + " >";
-
-//inject graphic of extension
-$("#appbar").append(
-"<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css'>" +
+$("#before-appbar").append(
 "<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>" +
-"<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js'></script>" +
 "<div class='divTable'>" +
 "<div class'divTableBody' style='border:1px solid #E0E0E0; border-radius:10px;'>" +
 "<form name='formA'>" +
-"<div class='divTableRow'>" +
+"<div class='divTableRow' id='row'>" +
 "<div class='divTableCell'><font size='3'><b>Language:</b></font></div>" +
-"<div class='divTableCell' id='it'>" + italy + "</div>" +
-"<div class='divTableCell' id='en'>" + unitedKingdom + "</div>" +
-"<div class='divTableCell' id='fr'>" + france + "</div>" +
-"<div class='divTableCell' id='es'>" + spain + "</div>" +
 "</div>" +
 "</form>" +
 "</div>" +
 "</div>"
 );
 
+for(var i = 0; i < languages.length; i++) {
+$("#row").append(
+	"<div class='divTableCell' id='"+ languages[i] +"'>" + images[i] + "</div>");
+}
 
-//inject the radio button in the extension's graphic
-$("#it").append(
-"<div class='radio'>" + 
-"<label><input type='radio' name='language' id='itradio' value='it'></input>" + 
-"</div>"
-);
-$("#en").append(
-"<div class='radio'>" + 
-"<label><input type='radio' name='language' id='enradio' value='en'> </input>" + 
-"</div>"
-);
-$("#fr").append(
-"<div class='radio'>" + 
-"<label><input type='radio' name='language' id='frradio' value='fr'></input>" + 
-"</div>"
-);
-$("#es").append(
-"<div class='radio'>" + 
-"<label><input type='radio' name='language' id='esradio' value='es'></input>" + 
-"</div>"
-);
+for (var i = 0; i < languages.length; i++) {
+	$("#" + languages[i]).append(
+		"<div class='radio'>" + 
+		"<label><input type='radio' name='language' id='itradio' value='"+ languages[i] +"'></input>" + 
+		"</div>"
+		);
+}
 
 var radios = document.forms["formA"].elements["language"];
 for(var i = 0, max = radios.length; i < max; i++) {
     radios[i].onclick = function() {
+       var value = this.value;
+       var splittedValue = value.split("-");
        var url = window.location.href;
        var q = url.match(/q=(.+)&oq=/);
-       var query = q[1];
+       //var query = q[1];
+       //alert(query);
        if(url.includes("search?sxsrf")) {
-	       var newUrl = url.replace("search?sxsrf","search?hl=" + this.value + "&gl=" + this.value +"&sxsrf");
+	       var newUrl = url.replace("search?sxsrf","search?hl=" + splittedValue[0] + "&gl=" + splittedValue[1] +"&sxsrf");
 	       window.location = newUrl;
 	   } else if (url.includes("search?hl=")) {
-	   		var newUrl = url.replace(/search\?hl=(.+)&gl=(.+)&sxsrf/,"search?hl=" + this.value + "&gl=" + this.value +"&sxsrf");
+	   		var newUrl = url.replace(/search\?hl=(.+)&gl=(.+)&sxsrf/,"search?hl=" + splittedValue[0] + "&gl=" + splittedValue[1] +"&sxsrf");
 	   		window.location = newUrl;
 	   }
     }
