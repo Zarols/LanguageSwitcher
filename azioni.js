@@ -9,20 +9,25 @@ for (var i = 0; i < languages.length; i++) {
 
 $("#before-appbar").append(
 "<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>" +
-"<div class='divTable'>" +
-"<div class'divTableBody' style='border:1px solid #E0E0E0; border-radius:10px;'>" +
+"<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>" +
+"<div class='divTable' id='divTable'>" +
+"<div class'divTableBody' style='border:1px solid #E0E0E0; border-radius:10px;' id='divTableBody'>" +
 "<form name='formA'>" +
 "<div class='divTableRow' id='row'>" +
 "<div class='divTableCell'><font size='3'><b>Language:</b></font></div>" +
-"</div>" +
 "</form>" +
+"</div>" +
 "</div>" +
 "</div>"
 );
+
+
+
 for(var i = 0; i < languages.length; i++) {
 $("#row").append(
 	"<div class='divTableCell' id='"+ languages[i] +"'>" + images[i] + "</div>");
 }
+
 for (var i = 0; i < languages.length; i++) {
 		$("#" + languages[i]).append(
 			"<div class='radio'>" + 
@@ -30,6 +35,27 @@ for (var i = 0; i < languages.length; i++) {
 			"</div>"
 		);
 	}
+
+$("#row").append(
+	"<div class='divTableCell' id='dropDown'>"+
+    "</div>"
+	);
+
+$("#dropDown").append(
+        "<button class='dropbtn' id='bottone'> Other" + 
+        "<i class='fa fa-cloud'></i>" +
+        "</button>" +
+        "<div id='myDropdown' class='dropdown-content'>" +
+            "<a id='menu1' href='#'>"+ images[0] + "</a>" +
+        "</div>" +
+ "</div>"
+ );
+
+$("#bottone").click(function(e) {
+    e.preventDefault();
+    document.getElementById("myDropdown").classList.toggle("show");
+});
+
 var radios = document.forms["formA"].elements["language"];
 for(var i = 0, max = radios.length; i < max; i++) {
     radios[i].onclick = function() {
@@ -49,9 +75,14 @@ for(var i = 0, max = radios.length; i < max; i++) {
     }
 }
 
-chrome.storage.sync.get(["checked"],function(result){
-	$("#"+result.checked+"radio").prop("checked", true);
-});
+var control  = window.location.href;
+if(control.includes("search?hl=")) {
+	chrome.storage.sync.get(["checked"],function(result){
+		$("#"+result.checked+"radio").prop("checked", true);
+	});
+} else {
+	$("#it-itradio").prop("checked",true);
+}
 
 
 
