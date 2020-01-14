@@ -46,7 +46,12 @@ $("#dropDown").append(
         "<i class='fa fa-angle-double-down'></i></b>" +
         "</button>" +
         "<div id='myDropdown' class='dropdown-content'>" +
-            "<a id='menu1' href='#'>"+ images[0] + "</a>" +
+            "<a id='menu1' href='#'>"+ 							images[0] + 
+		 "</a>" +
+		 "<a id='menu1' href='#'>"+ 							images[0] + 
+		 "</a>" +
+            "<a id='menu1' href='#'>"+ 							images[0] + 
+		 "</a>" +
         "</div>" +
  "</div>"
  );
