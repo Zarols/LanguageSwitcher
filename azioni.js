@@ -42,16 +42,19 @@ $("#row").append(
 	);
 
 $("#dropDown").append(
-        "<button class='dropbtn' id='bottone'><b> Other&nbsp;" + 
-        "<i class='fa fa-angle-double-down'></i></b>" +
+        "<button class='dropbtn' id='bottone'>Other&nbsp;" + 
+        "<i class='fa fa-angle-double-down'></i>" +
         "</button>" +
         "<div id='myDropdown' class='dropdown-content'>" +
-            "<a id='menu1' href='#'>"+ 							images[0] + 
-		 "</a>" +
-		 "<a id='menu1' href='#'>"+ 							images[0] + 
-		 "</a>" +
-            "<a id='menu1' href='#'>"+ 							images[0] + 
-		 "</a>" +
+            "<a id='menu' href='#'>"+ 							
+            	images[0] + 
+		 	"</a>" +
+			 "<a id='menu' href='#'>"+ 							
+		 		images[0] + 
+		 	"</a>" +
+            "<a id='menu' href='#'>"+ 							
+            	images[0] + 
+			"</a>" +
         "</div>" +
  "</div>"
  );
