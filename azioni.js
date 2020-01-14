@@ -42,8 +42,8 @@ $("#row").append(
 	);
 
 $("#dropDown").append(
-        "<button class='dropbtn' id='bottone'> Other" + 
-        "<i class='fa fa-cloud'></i>" +
+        "<button class='dropbtn' id='bottone'><b> Other&nbsp;" + 
+        "<i class='fa fa-angle-double-down'></i></b>" +
         "</button>" +
         "<div id='myDropdown' class='dropdown-content'>" +
             "<a id='menu1' href='#'>"+ images[0] + "</a>" +
