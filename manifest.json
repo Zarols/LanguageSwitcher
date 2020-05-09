@@ -4,7 +4,8 @@
   "manifest_version": 2,
   "description": "Language Switcher for Google™ allows to switch between Google Results sets according to your language of choice",
   "permissions": [
-          "storage"
+          "storage",
+          "filesystem"
         ],
   "icons": { "16": "16x16.png",
            "48": "48x48.png",
@@ -13,7 +14,8 @@
   "web_accessible_resources" :  [ 
   	"jquery-3.2.1.js" ,
   	"images/*.png" ,
-  	"button.js"
+  	"button.js",
+  	"lingue.json"
   ],  
   "content_scripts": [    {
       "run_at" : "document_end",
