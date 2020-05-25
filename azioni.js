@@ -5,6 +5,7 @@ for (var i = 0; i < languages.length; i++) {
 	var splitted = languages[i].split("-");
 	images.push("<img src=" + chrome.runtime.getURL("images/"+splitted[1]+".png") + " >");
 }
+var wikiUrl = '.wikipedia.org/wiki/';
 
 $("#before-appbar").append(
 "<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>" +
@@ -28,7 +29,12 @@ $("#before-appbar").append(
 
 $("#wiki").click(function(e) {
     e.preventDefault();
-    alert("not implemented");
+    chrome.storage.sync.get(["checked"],function(result){ 
+    	var language = result.checked.split("-");
+    	var q = url.match(/q=(.+)&oq=/);
+        var query = q[1];
+    	window.location = "https://" + language[0] + wikiUrl + query;
+    })
 });
 
 for(var i = 0; i < 4; i++) {
