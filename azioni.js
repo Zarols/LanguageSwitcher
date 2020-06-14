@@ -1,11 +1,19 @@
 var languages = ["it-it","es-es","en-uk","fr-fr","de-de","zh-cn","el-gr"];
 var images = [];
 var choice;
-for (var i = 0; i < languages.length; i++) {
-	var splitted = languages[i].split("-");
-	images.push("<img src=" + chrome.runtime.getURL("images/"+splitted[1]+".png") + " >");
-}
-var wikiUrl = '.wikipedia.org/wiki/';
+
+chrome.storage.sync.get(["languagesStored"],function(result){
+	if(result.languagesStored === undefined) {
+		chrome.storage.sync.set({"languagesStored": languages});
+	} 
+});
+
+chrome.storage.sync.get(["languagesStored"],function(result) {
+	for (var i = 0; i < result.languagesStored.length; i++) {
+		var splitted = result.languagesStored[i].split("-");
+		images.push("<img src=" + chrome.runtime.getURL("images/"+splitted[1]+".png") + " >");
+	}
+
 
 $("#before-appbar").append(
 "<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>" +
@@ -31,21 +39,29 @@ $("#wiki").click(function(e) {
     e.preventDefault();
     chrome.storage.sync.get(["checked"],function(result){ 
     	var language = result.checked.split("-");
-    	var q = url.match(/q=(.+)&oq=/);
-        var query = q[1];
-    	window.location = "https://" + language[0] + wikiUrl + query;
+    	var url = window.location.href;
+    	if(url.includes("&oq=")) {
+    		var q = url.match(/q=(.+)&oq=/);
+       		var query = q[1];
+    		window.location = "https://" + language[0] + '.wikipedia.org/wiki/' + query;
+    	} else {
+    		var q = url.match(/q=(.+)&/);
+       		var query = q[1];
+    		window.location = "https://" + language[0] + '.wikipedia.org/wiki/' + query;
+    	}
     })
 });
 
+
 for(var i = 0; i < 4; i++) {
 $("#row").append(
-	"<div class='divTableCell' id='"+ languages[i] +"'>" + images[i] + "</div>");
+	"<div class='divTableCell' id='"+ result.languagesStored[i] +"'>" + images[i] + "</div>");
 }
 
 for (var i = 0; i < 4; i++) {
-		$("#" + languages[i]).append(
+		$("#" + result.languagesStored[i]).append(
 			"<div class='radio'>" + 
-			"<label><input type='radio' name='language' value='"+ languages[i] +"' id='"+ languages[i]+ "radio" +"'></input>" + 
+			"<label><input type='radio' name='language' value='"+ result.languagesStored[i] +"' id='"+ result.languagesStored[i]+ "radio" +"'></input>" + 
 			"</div>"
 		);
 	}
@@ -62,34 +78,60 @@ $("#dropDown").append(
         "<div id='myDropdown' class='dropdown-content'></div>"
         );
 
-for(var i = 4; i < languages.length; i++) {
+for(var i = 4; i < result.languagesStored.length; i++) {
 	$("#myDropdown").append(
-		"<a id='" + languages[i] + "' >"+ 							
+		"<a id='" + result.languagesStored[i] + "' >"+ 							
 			images[i] + 
 		"</a>" 
 	);
 }
-			 
 
 $("#bottone").click(function(e) {
     e.preventDefault();
     document.getElementById("myDropdown").classList.toggle("show");
 });
 
-for(var i = 4; i < languages.length; i++) {
-	$("#" + languages[i]).click(function(e){
+
+	 
+
+for(var i = 4; i < result.languagesStored.length; i++) {
+	$("#" + result.languagesStored[i]).click(function(e){
 		var value = this.id;
 		var splittedValue = value.split("-");
        	var url = window.location.href;
        	if(url.includes("search?sxsrf")) {
 	       var newUrl = url.replace("search?sxsrf","search?hl=" + splittedValue[0] + "&gl=" + splittedValue[1] +"&sxsrf");
+	       var languages = result.languagesStored;
+	       var index = languages.indexOf(value);
+	       var temp = languages[0];
+	       languages[0] = value;
+	       languages[index] = temp;
 	       chrome.storage.sync.set({"checked": value});
+	       chrome.storage.sync.set({"languagesStored": languages});
 	       window.location = newUrl;
 	    } else if (url.includes("search?hl=")) {
 	   	   var newUrl = url.replace(/search\?hl=(.+)&gl=(.+)&sxsrf/,"search?hl=" + splittedValue[0] + "&gl=" + splittedValue[1] +"&sxsrf");
-	   	   chrome.storage.sync.set({"checked": value});
-	   	   window.location = newUrl;
-	   }	
+	   	   var languages = result.languagesStored;
+	       var index = languages.indexOf(value);
+	       var temp = languages[0];
+	       languages[0] = value;
+	       languages[index] = temp;
+	       chrome.storage.sync.set({"checked": value});
+	       chrome.storage.sync.set({"languagesStored": languages});
+	       window.location = newUrl;
+	   } else if (!(url.includes("hl="))) {
+	   	   var splittedUrl = url.split("?");
+	   	   var newUrl = splittedUrl[0] + "?hl=" + splittedValue[0] + "&gl=" + splittedValue[1] + "&" + splittedUrl[1];
+	   	   console.log(newUrl);
+	   	   var languages = result.languagesStored;
+	       var index = languages.indexOf(value);
+	       var temp = languages[0];
+	       languages[0] = value;
+	       languages[index] = temp;
+	       chrome.storage.sync.set({"checked": value});
+	       chrome.storage.sync.set({"languagesStored": languages});
+	       window.location = newUrl;
+	   }
 	});
 }
 
@@ -105,6 +147,11 @@ for(var i = 0, max = radios.length; i < max; i++) {
 	       window.location = newUrl;
 	   } else if (url.includes("search?hl=")) {
 	   		var newUrl = url.replace(/search\?hl=(.+)&gl=(.+)&sxsrf/,"search?hl=" + splittedValue[0] + "&gl=" + splittedValue[1] +"&sxsrf");
+	   		window.location = newUrl;
+	   }	
+	   else if (!(url.includes("search?hl="))) {
+	   		var splittedUrl = url.split("?");
+	   		var newUrl = splittedUrl[0] + "?hl=" + splittedValue[0] + "&gl=" + splittedValue[1] + "&" + splittedUrl[1];
 	   		window.location = newUrl;
 	   }	
     }
@@ -126,7 +173,7 @@ if(control.includes("search?hl=")) {
 	$("#it-itradio").prop("checked",true);
 }
 
-
+});		
 
 
 
