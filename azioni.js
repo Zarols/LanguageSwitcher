@@ -142,7 +142,28 @@ for(var i = 4; i < result.languagesStored.length; i++) {
 	});
 }
 
-var radios = document.forms["formA"].elements["language"];
+urlChanger();
+
+var control  = window.location.href;
+if(control.includes("search?hl=")) {
+	chrome.storage.sync.get(["checked"],function(result){
+		var radios = document.forms["formA"].elements["language"];
+		for(var i = 0; i < radios.length; i++) {
+			if(result.checked == radios[i].value) {
+				$("#"+result.checked+"radio").prop("checked", true);
+			} else {
+				images[0] = images[4];
+			}
+		}
+	});
+} else {
+	$("#it-itradio").prop("checked",true);
+}
+
+});		
+
+function urlChanger() {
+	var radios = document.forms["formA"].elements["language"];
 for(var i = 0, max = radios.length; i < max; i++) {
     radios[i].onclick = function() {
        var value = this.value;
@@ -164,23 +185,7 @@ for(var i = 0, max = radios.length; i < max; i++) {
     }
 }
 
-var control  = window.location.href;
-if(control.includes("search?hl=")) {
-	chrome.storage.sync.get(["checked"],function(result){
-		var radios = document.forms["formA"].elements["language"];
-		for(var i = 0; i < radios.length; i++) {
-			if(result.checked == radios[i].value) {
-				$("#"+result.checked+"radio").prop("checked", true);
-			} else {
-				images[0] = images[4];
-			}
-		}
-	});
-} else {
-	$("#it-itradio").prop("checked",true);
 }
-
-});		
 
 
 
