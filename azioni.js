@@ -38,24 +38,7 @@ $("#before-appbar").append(
 );
 console.log("HTML injeted");
 
-$("#wiki").click(function(e) {
-    e.preventDefault();
-    chrome.storage.sync.get(["checked"],function(result){ 
-    	var language = result.checked.split("-");
-    	var url = window.location.href;
-    	if(url.includes("&oq=")) {
-    		var q = url.match(/q=(.+)&oq=/);
-       		var query = q[1];
-    		window.location = "https://" + language[0] + '.wikipedia.org/wiki/' + query;
-    	} else {
-    		var q = url.match(/q=(.+)&/);
-       		var query = q[1];
-    		window.location = "https://" + language[0] + '.wikipedia.org/wiki/' + query;
-    	}
-    })
-    console.log("WIKI query");
-});
-
+wikiSearch();
 
 for(var i = 0; i < 4; i++) {
 $("#row").append(
@@ -183,6 +166,27 @@ for(var i = 0, max = radios.length; i < max; i++) {
 	   		window.location = newUrl;
 	   }	
     }
+}
+
+function wikiSearch() {
+	$("#wiki").click(function(e) {
+    e.preventDefault();
+    chrome.storage.sync.get(["checked"],function(result){ 
+    	var language = result.checked.split("-");
+    	var url = window.location.href;
+    	if(url.includes("&oq=")) {
+    		var q = url.match(/q=(.+)&oq=/);
+       		var query = q[1];
+    		window.location = "https://" + language[0] + '.wikipedia.org/wiki/' + query;
+    	} else {
+    		var q = url.match(/q=(.+)&/);
+       		var query = q[1];
+    		window.location = "https://" + language[0] + '.wikipedia.org/wiki/' + query;
+    	}
+    })
+    console.log("WIKI query");
+});
+
 }
 
 }
