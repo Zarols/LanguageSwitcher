@@ -1,10 +1,11 @@
 var languages = ["it-it","es-es","en-uk","fr-fr","de-de","zh-cn","el-gr"];
 var images = [];
 var choice;
-
+console.log("start-logging");
 chrome.storage.sync.get(["languagesStored"],function(result){
 	if(result.languagesStored === undefined) {
 		chrome.storage.sync.set({"languagesStored": languages});
+		console.log("first access");
 	} 
 });
 
@@ -12,6 +13,7 @@ chrome.storage.sync.get(["languagesStored"],function(result) {
 	for (var i = 0; i < result.languagesStored.length; i++) {
 		var splitted = result.languagesStored[i].split("-");
 		images.push("<img src=" + chrome.runtime.getURL("images/"+splitted[1]+".png") + " >");
+		console.log("loaded images");
 	}
 
 
@@ -34,6 +36,7 @@ $("#before-appbar").append(
 "</div>" +
 "</div>"
 );
+console.log("HTML injeted");
 
 $("#wiki").click(function(e) {
     e.preventDefault();
@@ -50,12 +53,14 @@ $("#wiki").click(function(e) {
     		window.location = "https://" + language[0] + '.wikipedia.org/wiki/' + query;
     	}
     })
+    console.log("WIKI query");
 });
 
 
 for(var i = 0; i < 4; i++) {
 $("#row").append(
 	"<div class='divTableCell' id='"+ result.languagesStored[i] +"'>" + images[i] + "</div>");
+	console.log("Table Injection");
 }
 
 for (var i = 0; i < 4; i++) {
@@ -64,6 +69,7 @@ for (var i = 0; i < 4; i++) {
 			"<label><input type='radio' name='language' value='"+ result.languagesStored[i] +"' id='"+ result.languagesStored[i]+ "radio" +"'></input>" + 
 			"</div>"
 		);
+		console.log("Table Injection");
 	}
 
 $("#row").append(
@@ -89,6 +95,7 @@ for(var i = 4; i < result.languagesStored.length; i++) {
 $("#bottone").click(function(e) {
     e.preventDefault();
     document.getElementById("myDropdown").classList.toggle("show");
+    console.log("On click dropDown");
 });
 
 
